@@ -1,0 +1,646 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+%\usepackage[french]{babel}
+\usepackage[english,frenchb]{babel}
+\addto\captionsfrench{\def\tablename{Tableau}}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{blindtext}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage[bottom]{footmisc}
+\usepackage{float}
+\pagestyle{plain}
+\usepackage[squaren, Gray, cdot]{SIunits}
+\usepackage{wallpaper}
+\usepackage{chngcntr}
+\usepackage{mathtools}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{subfig}
+% acronyms
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+%\usepackage{apacite}
+\usepackage[notocbib]{apacite}
+\usepackage[top=2.4cm, bottom=2.4cm, left=2.4cm, right=2.4cm]{geometry}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\usepackage{enumitem}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator*{\mini}{min}
+\DeclarePairedDelimiterX{\norm}[1]{\lVert}{\rVert}{#1}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\begin{document}
+{\setlength{\parindent}{1cm}
+
+\begin{center}
+\LARGE \textbf{ Compte-rendu de la préparation du TP }\\
+\medium \textbf{Boumadane Abdelmoumene}\\
+\huge {
+    \rule{\linewidth}{.5pt}
+	    \textbf{
+Réseaux Bayesiens et Chaines de Markov Cachées \\
+		} 
+		\rule{\linewidth}{.5pt}
+	}\\[0.4in]
+\end{center}
+\section*{1. Pleut-il ?}
+
+\textbf{Question 1 :} Dans cette partie nous modélisons le problème avec deux états $E_0$ et $E_1$, représentant, respectivement, l'état de \textbf{pluie} et l'état \textbf{sec}.
+\begin{equation}
+    E = (E_{0}, E_{1}) 
+\end{equation}
+La matrice des transitions est ainsi définie:
+\begin{equation}
+A = 
+    \begin{bmatrix}
+        1 - \beta & \beta\\
+        1 - \alpha & \alpha
+\end{bmatrix}
+\end{equation}
+L'état initial :
+\begin{equation}
+    \pi_{0} = (\gamma, 1-\gamma)
+\end{equation}\\
+\textbf{Question 2 :} ci-dessous (Figure \ref{Chaîne de Markov}), Nous modélisons le problème sous forme de graphe
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{Exo1/rain.png}
+    \caption{Représentation graphique de la chaîne de Markov - Partie 1}
+    \label{Chaîne de Markov}
+\end{figure}
+
+\textbf{Question 4} :Ci-dessous, la démonstration de l'expression analytique $P(E_1)=\frac{\beta}{1+\beta-\alpha}$.\\
+\begin{equation}
+    P(E_1) = P(E_1/E_0)P(E_0) + P(E_1/E_1)P(E_1)
+\end{equation}
+\begin{equation}
+        P(E_1) = \beta(1-P(E_1)) + \alpha P(E_1) 
+\end{equation}
+\begin{equation}
+    P(E_1) \beta + P(E_1)(\alpha - \beta) 
+\end{equation}
+\begin{equation}
+    P(E_1)(1 + \beta - \alpha) = \beta
+\end{equation}
+\begin{equation}
+    P(E_1) = \frac{\beta}{1+\beta - \alpha}
+\end{equation} \\
+
+\textbf{Question 5} : démonstration de la relation.$\;\;P(D_{pluie} = D) = pq^{D-1}$ \\ \\
+La durée de pluie correspend au nombre D-1 de passage de pluie a pluie avec un dernier passage de pluie a sec ainsi l'équation devient \\
+
+
+$\ \;\;\;\;\;\;\;\;\;P(D_{pluie} = D) = P(E_0/E_1) * P(E_1/E_1)^{d-1} \;\;\; \;\;\;\;$  \\
+et donc $\;\;P(D_{pluie} = D) = pq^{D-1}$ avec $p=1-\alpha$ et $q = \alpha$. \\
+
+
+En comparant les valeurs théoriques et pratiques au tableau  \ref{Moyennes_Var} nous constatons qu'effectivement les valeurs théoriques et les valeurs simulées convergent vers les valeurs théoriques. Ceci est prévisible car la simulation ne fait que reprendre la chaine de Markov et le $n=100000$ est grand donc la convergence est mieux d'avantage . 
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline 
+     &  Théotique & Théorique simulé \\
+    \hline
+    Moyenne & 2.85714 & 2.85780 \\
+    \hline
+    Variance & 5.306122 & 5.522490 \\
+    \hline
+    \end{tabular}
+    \caption{Moyennes et Variance théoriques et empiriques - pluie}
+    \label{Moyennes_Var}
+\end{table}
+
+
+\textbf{Question 6} :
+
+Nous affichons dans figure \ref{Représentation graphique de la chaîne de Markov - Partie 2} les densités de probabilité respectives la chaine de Markov théoriques, simulé et les observations de données contenues dans le fichier RR5MN. Nous constatons que le modele donne une bonne estimation de la durée des pluies, pour de faibles séquences (moins de 15*5 minutes). L’hypothèse de la loi géométrique peut se tenir dans cette intervalle. Cependant, nous pouvons pas porter cette hypothèse à des observations plus grandes car il y a une grande divergence dans ces intervalles entre le modele théorique et réel.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Exo1/part1_theo_prat.png}
+    \caption{Représntation graphique de la chaîne de Markov - Partie 2}
+    \label{Représentation graphique de la chaîne de Markov - Partie 2}
+\end{figure}
+
+Nous arrivons à consatater la divergence aussi depuis le tableau \ref{Moyennes_Var_RR5MN} ou les parametres des deux modeles sont trés différents (ie : c'est des densité de probalité totalement différentes).
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline 
+     &  Théotique & RR5MN \\
+    \hline
+    Moyenne & 2.8571 & 5.7581 \\
+    \hline
+    Variance & 5.306122 & 108.276 \\
+    \hline
+    \end{tabular}
+    \caption{Moyennes et Variance théoriques et RR5MN de période de pluies}
+    \label{Moyennes_Var_RR5MN}
+\end{table}
+\textbf{Question 7} :
+Avec un raisonnement analogique ont peu utilisé la chaine pour modéliser des périodes sèches de durée de moins de 350*5 minutes de depuis la figure \ref{Représentation graphique de la période séche}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Exo1/sec_RR5MN_part1.png}
+    \caption{Représentation graphique de la période séche}
+    \label{Représentation graphique de la période séche}
+\end{figure}
+
+\textbf{Question 8} :
+
+Nous concluons que la chaine de Markov définie ainsi peut être utilisée uniquement pour simuler les pluies d'une durée maximale de 5*15min, et pour les périodes sèches pour des durées inférieures a 350*5 minutes   
+
+
+
+
+
+
+
+\section*{2. Pleut-il ?}
+Dans cette partie, nous modifions le modèle précédent pour le transformer en une chaîne de Markov cachée. \\
+On supposera, dans cette partie, un modèle à 3 états : État ciel clair sans nuage \emph{Clear Sky} représenté par l'état $E_0$, l'état nuageux \emph{Cloudy}, représenté par l'état $E_1$ et l'état très nuageux \emph{Very Cloudy}, représenté par l'état $E_2$. \\
+
+\textbf{Question 1} : la représentation en graphe de ces états est donnée dans la figure ci-dessous (Figure \ref{Représentation graphique de la chaîne de Markov - Partie 1}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.53]{Exo2/chaine2.png}
+    \caption{Représentation graphique de la chaîne de Markov - Partie 2 RR5MN}
+    \label{Représentation graphique de la chaîne de Markov - Partie 1}
+\end{figure}
+La valeur $\textbf{0}$ de la première ligne et troisième colonne, indique que l'on peut pas passer d'un état sans nuages (ciel clair) à un état très nuageux, on doit passer passer par l'état (peu) nuageux. La formation des nuages est un évènement graduelle, ils n'apparaissent pas spontanément dans le ciel. \\
+
+
+\textbf{Question 2:}
+
+Dans cette partie nous avons generer une séquence de 10000 observation, Nous comparons dans le tableau \ref{Pourcentages de pluie et sécheresse} les pourecentages théoriques et réel de la pluie et la séchresse. Et constate que le modele markoviens estime assez bien les observations totale de bruits cependant ceci n'est pas nécéressemnt suiffsant pour modéliser la durée de pluie ou de sechresse. 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline 
+     & Théorique & RR5MN \\
+    \hline
+    Pourentage pluie & $92.33\;\%$ & $95.8\;\%$ \\
+    \hline
+    Pourcentage sécheresse & $7.66\;\%$ & $4.193\;\%$\\
+    \hline
+    \end{tabular}
+    \caption{Pourcentages de pluie et sécheresse}
+    \label{Pourcentages de pluie et sécheresse}
+\end{table}
+
+En effet la figure \ref{Représentation graphique de sec la chaîne de Markov - Part2} et la figure \ref{Densité de probabilité des périodes de pluie-part2} nous constatons que la chaine de markov avec état chaché tel que déifinie n'a pas améliorer la l'éstimation de la distribution de la sechresse.
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Exo1/sec_part2_part1_mr.png}
+    \caption{Densité de probabilité des périodes de sécheresse}
+    \label{Représentation graphique de sec la chaîne de Markov - Part2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Exo1/pluie_part2_part1_mr.png}
+    \caption{Densité de probabilité des périodes de pluie}
+    \label{Densité de probabilité des périodes de pluie-part2}
+\end{figure}
+
+\textbf{Question 3:}
+Dans cette partie nous utilisons l'algorithme itératif de Baum Welch et la série expérimentale pour améliorer les résultats.Nous constatons après exécution et depuis les matrices de transition que le nouveau modèle a plus tendance a privilégié le bouclage en état ou il y a plus de possibilités de pluie, ceci permettra au modèle de mieux représenter des séries de pluies longues, par contre cela va affecter négativement les séries sèches, car elles sont moins probables maintenant.
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering Matrice sans ajustement]{{\includegraphics[scale=0.8]{Exo1/non_adjusted.png} }}%
+    \qquad
+    \subfloat[\centering Matrice aprés ajustement]{{\includegraphics[scale=0.8]{Exo1/adjusted_matrx.png}}}%
+    \caption{Matrice de transition des états}%
+    \label{fig:example}%
+\end{figure}
+
+
+\textbf{Question 4:} 
+Dans cette partie on génère avec le nouveau modèle une séquence de longueur 100000 observations, et nous constatons dans la figure \ref{Représentation graphique de pluie la chaîne de Markov - Partie 23} que le modèle arrive très bien à estimer les séries de pluies même pour des périodes longues. Par contre ce modèle n'est pas adapté pour l'estimation des séries sèches. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{Exo1/adjused_pluie_all.png}
+    \caption{Densité de probabilité des périodes de pluie}
+    \label{Représentation graphique de pluie la chaîne de Markov - Partie 23}
+\end{figure}
+
+
+
+
+
+
+\section*{3. froid ou chaud ?}
+
+\textbf{Question 1} : le problème sous forme de chaîne de Markov cachée : \\
+\begin{itemize}
+    \item L'ensemble des états $E$ :
+        \begin{equation}
+            E = (E_{chaude}, E_{froide})
+        \end{equation}
+    \item La matrice de transition $A$ : 
+        \begin{equation}
+            A = 
+            \begin{bmatrix}
+                0.6 & 0.4 \\
+                0.3 & 0.7
+            \end{bmatrix}
+        \end{equation}
+    \item La matrice d'émission $B$
+            \begin{equation}
+            B = 
+            \begin{bmatrix}
+                0.1 & 0.4 & 0.5 \\
+                0.6 & 0.3 & 0.1
+            \end{bmatrix}
+        \end{equation}
+ Les probabilités initiales ne sont pas spécifiées, nous pouvons supposé qu'elles sont équiprobables 
+\end{itemize}
+
+
+
+
+\section*{4. Système de surveillance}
+\textbf{Question 1} : on modélise ce problème en utilisant une chaîne de Markov avec 7 états (\ref{Représentation graphique de la chaîne de Markov - Partie 4}), où chaque état représente une pièce, les transitions représentent les portes entre les pièces et les observables le fait qu'un individus se trouve ou pas dans une pièce (un état).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{Exo4/systeme_de_surveillance_graphe.png}
+    \caption{Représentation graphique de la chaîne de Markov - Système de surveillance}
+    \label{Représentation graphique de la chaîne de Markov - Partie 4}
+\end{figure}
+
+\textbf{Question 2} : la matrice de transition $A$ du modèle :         \begin{equation}
+            A = 
+            \begin{bmatrix}
+                0.6 & 0.4 & 0 & 0 & 0 & 0 & 0 \\
+                \frac{0.4}{3} & 0.6 & \frac{0.4}{3} & \frac{0.4}{3} & 0 & 0 & 0 \\
+                0 & 0.2 & 0.6 & 0 & 0.2 & 0 & 0 \\
+                0 & 0.2 & 0 & 0.6 & 0.2 & 0 & 0 \\
+                0 & 0 & \frac{0.4}{3} & \frac{0.4}{3} & 0.6 & \frac{0.4}{3} & 0 \\
+                0 & 0 & 0 & 0 & 0.2 & 0.6 & 0.2 \\
+                0 & 0 & 0 & 0 & 0 & 0.4 & 0.6 \\
+            \end{bmatrix}
+        \end{equation}
+Cette matrice est faite en supposant que la probabilité que la personne reste dans la même pièce est de $60 \%$ et que le reste ( $40 \%$ ) est repartie équiprobablement entre les pièces adjacentes. \\
+La matrice d'émission $B$ : 
+            \begin{equation}
+            B = 
+            \begin{bmatrix}
+                0.5 & 0.5 & 0 & 0 & 0 & 0 & 0\\
+                \frac{0.5}{3} & 0.5 & \frac{0.5}{3} & \frac{0.5}{3} & 0 & 0 & 0\\
+                0 & 0.25 & 0.5 & 0 & 0.25 & 0 & 0\\
+                0 & 0.25 & 0 & 0.5 & 0.25 & 0 & 0\\
+                0 & 0 & \frac{0.5}{3} & \frac{0.5}{3} & 0.5 & \frac{0.5}{3} & 0\\
+                0 & 0 & 0 & 0 & 0.25 & 0.5 & 0.25\\
+                0 & 0 & 0 & 0 & 0 & 0.5 & 0.5
+            \end{bmatrix}
+        \end{equation}
+La matrice $B$ a la même taille que $A$, et chaque probabilité représente le fait que la personne soit dans une pièce. \\
+L'état initial $\pi_{0}$ est donné par $\pi_{0} = (1,0,0,0,0,0,0)$.  \\
+
+\textbf{Question 3} : On genere un echantillon de 10000 variables,On obtient un pourcentage d'éstimation de ( $49.906 \%$ ),cela veut dire que le modele donnent une mauvaise éstimation de la position de plus de la moitiés des cas.
+
+
+\textbf{Question 5} : la probabilité de rester dans une pièce pendant au moins 20s est la probabilité de transiter vers un même état et que le symbole émis est la même chambre. Nous résumons ceci par l'opération
+
+\begin{equation}
+P(chambre) =\sum_{i=0}^{7}P(E_i)*P(E_i/E_i)
+\end{equation}
+
+
+\begin{equation}
+P(chambre) =0.6*\sum_{i=0}^{7}P(E_i)
+\end{equation}
+
+\begin{equation}
+P(chambre) =0.6
+\end{equation}
+
+
+En comparant avec les valeurs partique on obtient 0.60115 pour la premiere et 0.3604 pour le second
+
+Avec le même raisonnement, la probabilité d'estimation de rester dans une chambre 30 secondes est : 
+
+P(chambre) =\sum_{i=0}^{7}P(E_i)P(E_i/E_i)^2=0.36 $\\
+
+
+\textbf{Question 6 histogram des états} : 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{Exo4/newplot(1).png}   
+    \caption{Représentation graphique de la chaîne de Markov - Système de surveillance}
+    \label{Représentation graphique de la chaîne de Markov - Partie 4}
+\end{figure}
+
+empiriquement 
+les probalité sont 
+array([0.06928, 0.20847, 0.14289, 0.14228, 0.21664, 0.14643, 0.07401])
+
+Preuve que $P_{n} = \pi_{0}  A^n\$
+
+\textbf{Question 7 partie a} : Preuve que $P_{n} = \pi_{0}  A^n\$
+
+\begin{equation}
+    p_1 = \pi_{0} A\\
+\end{equation}
+\begin{equation}
+    p_2 = p_1A\\
+\end{equation}
+\begin{equation}
+    p_{n+1} = p_n A\\
+\end{equation}
+Par récurrence : 
+\begin{equation}
+    P_{n} = \pi_{0}  A^n\\
+\end{equation}
+
+\begin{equation}
+    \pi^{*} = \lim\limits_{n \to +\infty}\pi_{0}A^n
+\end{equation}
+
+\textbf{Question 7 partie b} : Nous démontrons 
+$\pi^{*}(A-I)=0$\\
+
+La matrice $A$ est régulieres (ie: inversible) et donc $\pi^{*}$ converge vers une valeur fixe. Cette convergence se traduit par : 
+
+\begin{equation}
+    \pi^{*} = \pi^{*}A 
+\end{equation}
+
+Ainsi nous  arrivons à avoir la relation : 
+
+\begin{equation}
+    \pi^{*}(A-I)=0
+\end{equation}
+
+ et donc $\pi^{*}$ est vecteur propre gauche de A.
+
+\section*{5. Pile ou face ?}
+
+
+\textbf{Question 1} : les états du modèle sont :
+\begin{equation}
+    E = (E_{piece 1}, E_{piece 2}, E_{piece 3})
+\end{equation}
+Où $E_{piece i}$ représente le lancé de la $i^{eme}$ piece de monnaie. Ainsi, la matrice de transitions $A$ est de dimension $3$x$3$. Les valeurs observables sont \textbf{pile} et \textbf{face}. Ainsi, la matrice d'émission est de dimension $3$x$2$. \\
+
+\textbf{Question 2} : La matrice de transitions : 
+        \begin{equation}
+            A = 
+            \begin{bmatrix}
+                0.5 & 0.4 & 0.1\\
+                0.3 & 0.4 & 0.3 \\
+                0.1 & 0.2 & 0.7
+            \end{bmatrix}
+        \end{equation}
+La matrice d'émission :
+        \begin{equation}
+            B = 
+            \begin{bmatrix}
+                0.5 & 0.5\\
+                0.25 & 0.75\\
+                0.75 & 0.25
+            \end{bmatrix}
+        \end{equation}
+        
+\textbf{Question 3} : La représentation en forme de graphe des états.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{Exo5/exo5_hmc.png}
+    \caption{Représentation graphique de la chaîne de Markov - Partie 5}
+    \label{Représentation graphique de la chaîne de Markov - Partie 5}
+\end{figure}
+Le treillis associé à la séquence "FPF" est donné par la figure \ref{Représentation du treillis pour chaîne "FPF"} ci-dessous.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.55]{Exo5/rbcmc.png}
+    \caption{Représentation du treillis pour chaîne "FPF"}
+    \label{Représentation du treillis pour chaîne "FPF"}
+\end{figure}
+
+
+\textbf{Question 8} :\\
+\textbf{a -} calculer $\delta_{n}(j)$ revient à exécuter l'algorithme de \emph{Viterbi}, les colonnes de la matrice (de gauche à droite) sont les résultats pour chaque étape du déroulement de l'algorithme de \emph{Viterbi} (ci-dessous).  \\
+\textbf{b -} en appliquant l'algorithme de \emph{Viterbi}, à la main, on obtient : 
+
+\begin{multicols}{2}
+\begin{equation*}
+    \left\{
+        \begin{array}{ll}
+            \delta_{1}(1) = \textbf{0.5}\;\;\\
+            \delta_{1}(2) = \textbf{0}\;\;\;\;\\
+            \delta_{1}(3) = \textbf{0}\;\;\;
+        \end{array}
+    \right.
+\end{equation*}
+
+\begin{equation}
+    \left\{
+        \begin{array}{ll}
+            \psi_{1}(1) = 0\\
+            \psi_{1}(2) = 0\\
+            \psi_{1}(3) = 0
+        \end{array}
+    \right.
+\end{equation}
+\end{multicols}
+
+
+\begin{multicols}{2}
+\begin{equation*}
+    \left\{
+        \begin{array}{ll}
+            \delta_{2}(1) = \max(0.5 \times 0.5) \times 0.5 = \textbf{0.125}\\
+            \delta_{2}(2) = \max(0.5 \times 0.4) \times 0.25 = \textbf{0.05}\\
+            \delta_{2}(3) = \max(0.5 \times 0.1) \times 0.75 = \textbf{0.0375}
+                \end{array}
+    \right.
+\end{equation*}
+\break
+\begin{equation}
+    \left\{
+        \begin{array}{ll}
+            \psi_{2}(1) = 1\\
+            \psi_{2}(2) = 1\\
+            \psi_{2}(3) = 1
+                \end{array}
+    \right.
+\end{equation}
+\end{multicols}
+
+
+\begin{multicols}{2}
+\begin{equation*}
+    \left\{
+        \begin{array}{ll}
+            \delta_{3}(1) = \max(0.125 \times 0.5, 0.05 \times 0.3, 0.0375 \times 0.1) \times 0.5 = \textbf{0.03125}\\
+            \delta_{3}(2) = \max(0.125 \times 0.4, 0.05 \times 0.4, 0.0375 \times 0.2) \times 0.25 = \textbf{0.0375}\\
+            \delta_{3}(3) = \max(0.125 \times 0.1, 0.05 \times 0.3, 0.0375 \times 0.7) \times 0.25 = \textbf{0.00656}
+                \end{array}
+    \right.
+\end{equation*}
+\break
+\begin{equation}
+    \left\{
+        \begin{array}{ll}
+            \psi_{3}(1) = 1\\
+            \psi_{3}(2) = \textbf{1}\\
+            \psi_{3}(3) = 3
+                \end{array}
+    \right.
+\end{equation}
+\end{multicols}
+
+La séquence optimale est donc : "Pièce 1", "Pièce 1" et "Pièce 2" avec une probabilité de $\textbf{0.0375}$. \\
+
+
+\section*{6.  Reconnaissance vocale de mots isolés}
+
+\subsection*{6.1 Étude qualitative des séquences}
+
+Le but de cette partie est d’analyser (visuellement) des différentes features qui seront utilisées pour représentées les mots et ainsi comparer entre elles.
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{EXO06_NEW/exo06_1.png}
+    \caption{Affichage des différents features du apple 0}
+    \label{Représentation features apple0}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{EXO06_NEW/peach.png}
+    \caption{Affichage des différents features de peach 0}
+    \label{Représentation features banana1}
+\end{figure}
+
+
+
+Les figures \ref{Représentation features apple0}  et \ref{Représentation features banana1} les séries temporelles et les (features) pour les trois méthodes utilisées, pour les premieres instances des mots appleet peach.\\
+
+\\ On constate que les trois méthodes sont déscrimantes des deux mots, a titre d'exemple la a méthode \textbf{Spectrum} (utilisation du spectre obtenu en utilisant la transformée de Fourier) permet de distniguer apple est fortes pour les faible fréquence tout au long du mots alors que pour peach, on a plus de fortes valeurs,  on a deux zones de zones d'haute fréquence au début et enfin de la phrase, le deuxieme modele basé sur les  la méthode \textbf{Filter}(les énergies obtenues par 26 filtre) le meme effet mais avec moins de traits, et enfin la représentation  \textbf{MFCC}(la transformée en cosinus discrète des énergies obtenues par la méthode. permet aussi de distinguer ces valeurs.
+
+
+
+De plus depuis les histogrames, on constate que les diiférentes feautres pour les trois methodes suivents a peu prés une distribution gausienne ce qui justifie l'utilisation, d'un HMM, dans ce cas.
+
+Ci-dessous, la nuage des points des deux premières composantes pour chaque caractéristique, et en codecouleur, les instants début, milieu et fin de la séquence (en rouge, vert et bleu, respectivement)
+
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{EXO06_NEW/apple_spectrum.png}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{EXO06_NEW/apple_filter.png}
+\endminipage\hfill
+\minipage{0.30\textwidth}%
+  \includegraphics[width=\linewidth]{EXO06_NEW/apple_mfcc.png}
+\endminipage
+
+    \caption{Nuages de points en utilisant les deux premières composantes pour chaque}
+\end{figure}
+
+On constate depuis la figures que les deux premiere caractéristiques pour les deux encodage .. ... .. est correllé et ne sont pas assez pour distinguer le début de fin de la phrase, alors qu'on constate que  \textbf{MFCC} arrive à distniguer le début de la fin et milieux des points, en fonction des deux premiere composantes, de plus on constate qu'il n'ya pas de relation linaire entre les composantes, c'est a dire qu'ils portent des information différentes.
+
+On remarque que la méthode MFCC, sépare mieux entre ces trois instants et donc, à priori, ce dernierreprésente mieux l’aspect temporel des séquences. Ceci justifie, à la fois, l’utilisation de trois états pour lesHMM et qu’à priori, les caractéristiques MFCC sont les meilleurs pour représenter les mots (i.e. donneront demeilleurs résultats en classification)
+
+\subsection*{6. 2 Apprentissage d’une chaîne de Markov cachée}
+
+
+\begin{figure}[!htb]
+
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{EXO06_NEW/log_probality_banana.png}
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{EXO06_NEW/log_prob_apple.png}
+\endminipage
+
+\caption{Logarithme des probabilités pour les 15 observations du mot peach a droite et apple a gauche}
+\end{figure}
+
+
+En fixant MFCC on considere l'évolution de la log probality allant de 1a 
+
+\begin{figure}[H]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{EXO06_NEW/number_of_states_apple.png}
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+  \includegraphics[width=\linewidth]{EXO06_NEW/number_of_states_peach.png}
+\endminipage
+\endminipage
+
+\caption{Logarithme des probabilités pour les 15 observations du mot banana a droite et apple a gauche}
+\end{figure}
+
+On constate cette meme obsérvation depuis la figure, 
+
+//add gaussian distributions
+
+
+
+Vous pouvez également comparer pour chaque méthode l’ordre de grandeur entre les variances et les covariances
+des matrices de covariances. Qu’observe-t-on ?\\
+
+Etudier la séquence des états optimale pour chacun des 15 enregistrements. La chaine obtenue est-elle du type left-
+to-right ? Mettre les séquences en relation avec la matrice de transition. Vous pourrez par exemple tester pour des
+HMM ayant un nombre d’états compris entre 2 et 5.\\
+
+Au final, que peut-on en conclure ? Y a-t-il une ou plusieurs méthode(s) qui semblent mieux convenir ? Un nombre d’état optimal ?
+
+\subsection*{6. 3 Apprentissage d’une chaîne de Markov cachée pour chaque mot du dictionnaire}
+
+Pour les caractéristiques MFCC, on tire aléatoirement un label parmi les 7 et ensuite on tire aléatoirementun mot parmi l’ensemble des mots ayant ce label, et ce avec la méthodechoicedu packagenumpy.On calcule ensuite lalog_probability pour chacune des chaîne.
+
+Nous avons meneer cette experience avec 100 tirage aléatoire, et l'algorithme arrive avec la méthode \textbf{mfcc} a distinguer les différentes classes. En effet on constate sans.  
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{EXO06_NEW/mfcc_distribution.png}
+    \caption{Affichage des différents features de peach 0}
+    \label{Représentation features banana1}
+\end{figure}
+
+On constate que la distribution est presque égale, ce qui reflete un bon aprentissage du modele, par contre, pour les autres modeles, les models sont biaé et on prédit 
+
+
+
+
+
+
+\end{document}
+

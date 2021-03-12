@@ -219,7 +219,7 @@ class Words:
         #plt.colorbar()
 
 
-    def plotFeatureXY(self,label='apple',methode=None,I=0,J=1):
+    def plotFeatureXY(self,label='apple',methode=None,I=0,J=1,figsize=(8, 6)):
         '''
         Affiche dans un plan les composantes I et J de feature pour tous les mots ==label
         En rouge le bébut du mot, en vert le milieu du mot, en bleu la fin du mot
